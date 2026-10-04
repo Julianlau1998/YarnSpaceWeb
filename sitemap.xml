@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://yarnspace.app/</loc>
+        <lastmod>2026-10-04</lastmod>
+        <xhtml:link rel="alternate" hreflang="en" href="https://yarnspace.app/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://yarnspace.app/de/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://yarnspace.app/"/>
+    </url>
+    <url>
+        <loc>https://yarnspace.app/de/</loc>
+        <lastmod>2026-10-04</lastmod>
+        <xhtml:link rel="alternate" hreflang="en" href="https://yarnspace.app/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://yarnspace.app/de/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://yarnspace.app/"/>
+    </url>
+    <url>
+        <loc>https://yarnspace.app/privacy/</loc>
+        <lastmod>2026-10-04</lastmod>
+        <xhtml:link rel="alternate" hreflang="en" href="https://yarnspace.app/privacy/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://yarnspace.app/de/datenschutz/"/>
+    </url>
+    <url>
+        <loc>https://yarnspace.app/de/datenschutz/</loc>
+        <lastmod>2026-10-04</lastmod>
+        <xhtml:link rel="alternate" hreflang="en" href="https://yarnspace.app/privacy/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://yarnspace.app/de/datenschutz/"/>
+    </url>
+</urlset>
