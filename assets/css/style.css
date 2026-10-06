@@ -278,21 +278,45 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 .device-stage .iphone { position: absolute; right: 2%; bottom: 0; width: 15.5%; }
 
 /* The bezel is the image's margin: margins in % refer to the frame's own width, so the bezel
-   keeps its proportion at every size (padding would refer to the parent instead). */
+   keeps its proportion at every size (padding would refer to the parent instead). Around it a
+   titanium edge in a few metal tones, the Dynamic Island and the side buttons, as on an
+   iPhone 17 Pro, so the phone also reads as one on the dark page. */
 .iphone {
-    position: relative; display: block; background: #0b0b0e;
-    border-radius: 18% / 8.3%;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.10), inset 0 0 0 1.5px #3b3b43,
-        0 24px 50px rgba(40, 30, 110, 0.28);
+    position: relative; display: block; background: #050506;
+    border-radius: 17.5% / 8.1%;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+        0 0 0 1.5px #1c1c20,
+        0 0 0 3px #8e8e96,
+        0 0 0 4px #c9c9cf,
+        0 0 0 5px #55555c,
+        0 28px 56px rgba(20, 12, 70, 0.42);
 }
 .iphone img {
-    display: block; width: 92%; margin: 4%;
-    border-radius: 15.2% / 7%;
+    display: block; width: 91%; margin: 4.5%;
+    border-radius: 14% / 6.5%;
 }
+/* Dynamic Island */
 .iphone::after {
-    content: ""; position: absolute; top: 3.3%; left: 50%; transform: translateX(-50%);
-    width: 28.6%; height: 3.6%; background: #000; border-radius: 999px;
+    content: ""; position: absolute; top: 3.5%; left: 50%; transform: translateX(-50%);
+    width: 29%; height: 3.4%; background: #000; border-radius: 999px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
+/* Action button and volume on the left, the side button on the right */
+.iphone::before {
+    content: ""; position: absolute; left: -7px; top: 17%; width: 3px; height: 26%;
+    border-radius: 2px 0 0 2px;
+    background: linear-gradient(to bottom,
+        #9a9aa2 0 13%, transparent 13% 27%,
+        #9a9aa2 27% 58%, transparent 58% 66%,
+        #9a9aa2 66% 97%, transparent 97%);
+}
+.iphone .side {
+    position: absolute; right: -7px; top: 26%; width: 3px; height: 13%;
+    border-radius: 0 2px 2px 0; background: #9a9aa2;
+}
+.device-stage .iphone::before { width: 2px; left: -6px; }
+.device-stage .iphone .side { width: 2px; right: -6px; }
 
 .ipad {
     display: block; background: #0b0b0e;
