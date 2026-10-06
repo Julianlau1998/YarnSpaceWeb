@@ -282,7 +282,7 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
    titanium edge in a few metal tones, the Dynamic Island and the side buttons, as on an
    iPhone 17 Pro, so the phone also reads as one on the dark page. */
 .iphone {
-    position: relative; display: block; background: #050506;
+    position: relative; display: flow-root; background: #050506;
     border-radius: 17.5% / 8.1%;
     box-shadow:
         inset 0 0 0 1px rgba(255, 255, 255, 0.06),
@@ -319,7 +319,7 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 .device-stage .iphone .side { width: 2px; right: -6px; }
 
 .ipad {
-    display: block; background: #0b0b0e;
+    display: flow-root; background: #0b0b0e;
     border-radius: 3.6% / 4.75%;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.10), inset 0 0 0 1.5px #3b3b43,
         0 24px 50px rgba(40, 30, 110, 0.28);
@@ -351,24 +351,67 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
     width: 14%; height: 40%; background: #c9c9d1; border-radius: 0 0 12px 12px;
 }
 
-/* Screenshot gallery */
+/* Screens showcase: the features on the left, one large iPhone on the right that shows the
+   chosen one's screen (crossfading); below 900 px the features become a row of chips above it. */
 
-.gallery {
-    display: grid; gap: 28px; grid-template-columns: repeat(4, 1fr);
-    max-width: 1040px; margin: 0 auto;
+.showcase {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+    gap: clamp(32px, 6vw, 88px); align-items: center;
+    max-width: 980px; margin: 0 auto;
 }
-.gallery figure { margin: 0; text-align: center; }
-.gallery .iphone { margin: 0 auto 18px; max-width: 240px; }
-.gallery figcaption { font-weight: 700; }
-.gallery figcaption span { display: block; color: var(--muted); font-weight: 500; font-size: 0.95rem; }
+.showcase-list { display: grid; gap: 6px; position: relative; }
+.showcase-item {
+    display: grid; gap: 2px; text-align: left; font: inherit; color: var(--text);
+    padding: 14px 18px 14px 20px; border: 0; border-radius: 18px; cursor: pointer;
+    background: transparent; position: relative;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+.showcase-item strong { font-size: 1.08rem; }
+.showcase-item span { color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
+.showcase-item::before {
+    content: ""; position: absolute; left: 6px; top: 16px; bottom: 16px; width: 4px;
+    border-radius: 4px; background: var(--gradient); opacity: 0; transition: opacity 0.25s ease;
+}
+.showcase-item:hover { background: color-mix(in srgb, var(--surface) 60%, transparent); }
+.showcase-item[aria-selected="true"] { background: var(--surface); box-shadow: var(--shadow); }
+.showcase-item[aria-selected="true"]::before { opacity: 1; }
+.showcase-item:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+/* The glow reaches past the page's edges: cut off at the section, so the page never scrolls sideways. */
+#screens { overflow-x: clip; }
+.showcase-phone { position: relative; }
+/* A soft glow behind the phone, in the app's colors. */
+.showcase-phone::before {
+    content: ""; position: absolute; inset: 8% -18%; z-index: -1; filter: blur(60px);
+    background: radial-gradient(closest-side, rgba(138, 79, 220, 0.45), rgba(75, 120, 236, 0.18), transparent);
+}
+.showcase-phone .iphone { width: 100%; max-width: 320px; margin: 0 auto; }
+.showcase-screens {
+    position: relative; width: 91%; margin: 4.5%; aspect-ratio: 600 / 1304;
+    border-radius: 14% / 6.5%; overflow: hidden; background: #f1effa;
+}
+.showcase-screens img {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border-radius: 0;
+    opacity: 0; transform: scale(1.015); transition: opacity 0.45s ease, transform 0.6s ease;
+}
+.showcase-screens img.is-active { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+    .showcase-screens img { transition: none; }
+}
+
 @media (max-width: 640px) {
     .device-stage { width: calc(100% + 24px); margin-left: -12px; margin-top: 44px; }
 }
 @media (max-width: 900px) {
-    .gallery {
-        grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 62%;
-        overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 4px 24px;
-        -webkit-overflow-scrolling: touch;
+    .showcase { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .showcase-list {
+        grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto;
+        scroll-snap-type: x mandatory; padding: 4px 4px 10px; margin: 0 -4px;
+        -webkit-overflow-scrolling: touch; scrollbar-width: none;
     }
-    .gallery figure { scroll-snap-align: center; }
+    .showcase-list::-webkit-scrollbar { display: none; }
+    .showcase-item { scroll-snap-align: center; padding: 10px 16px; border-radius: 999px; }
+    .showcase-item span, .showcase-item::before { display: none; }
+    .showcase-item strong { font-size: 0.98rem; white-space: nowrap; }
+    .showcase-phone .iphone { max-width: 260px; }
 }
