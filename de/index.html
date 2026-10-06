@@ -85,9 +85,12 @@
 
     <main id="main">
         <section class="hero">
+            <svg class="hero-thread" viewBox="0 0 1440 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <path class="strand" d="M-40 470 C 160 330, 330 560, 520 420 S 860 170, 1040 300 S 1330 500, 1480 250"/>
+                <path class="ply" d="M-40 482 C 170 350, 330 575, 530 432 S 870 186, 1050 316 S 1335 512, 1480 266"/>
+            </svg>
             <div class="container">
                 <img class="hero-icon" src="../assets/img/icon-512.png" width="128" height="128" alt="App-Symbol von YarnSpace: ein Wollknäuel mit Stricknadel und Häkelnadel">
-                <a class="hero-new" href="#photo-to-chart"><span>Neu</span> Foto zu Zählmuster<span class="hero-new-more">: jedes Bild als Zählmuster</span> <span aria-hidden="true">→</span></a>
                 <h1>Die <span class="gradient-text">Strick- &amp; Häkel&#8209;App</span> für alles, was du machst</h1>
                 <p class="lead">Reihen zählen, den Garnvorrat im Blick behalten, Anleitungen auf Ravelry finden und Garne, die sich gleich verstricken. YarnSpace bringt deine Projekte, Anleitungen und dein Garn zusammen, auf iPhone, iPad, Mac und Apple Watch.</p>
                 <div class="cta">
@@ -245,7 +248,7 @@
             <div class="container">
                 <div class="highlight">
                     <div class="highlight-art watch-art">
-                        <div class="watch"><div class="watch-case"><img src="../assets/img/shots/de-watch-counter.webp" width="416" height="496" alt="YarnSpace auf der Apple Watch: der Reihenzähler eines Projekts bei Reihe 42 von 120" loading="lazy"><span class="crown" aria-hidden="true"></span></div></div>
+                        <div class="watch"><span class="band" aria-hidden="true"></span><span class="band bottom" aria-hidden="true"></span><div class="watch-case"><img src="../assets/img/shots/de-watch-counter.webp" width="416" height="496" alt="YarnSpace auf der Apple Watch: der Reihenzähler eines Projekts bei Reihe 42 von 120" loading="lazy"><span class="crown" aria-hidden="true"></span></div></div>
                     </div>
                     <div>
                         <span class="eyebrow">Apple Watch</span>
@@ -258,7 +261,7 @@
                 <div class="highlight reverse" id="photo-to-chart">
                     <div class="highlight-art chart-art">
                         <div class="compare" data-compare>
-                            <img class="compare-after" src="../assets/img/shots/photo-chart-after.webp" width="880" height="880" alt="Dasselbe Bild als Zählmuster mit 60 mal 60 Maschen in 8 Farben, erstellt von YarnSpace" loading="lazy">
+                            <img class="compare-after" src="../assets/img/shots/photo-chart-after.webp" width="880" height="880" alt="Dasselbe Bild als Zählmuster mit 60 mal 60 Maschen in 6 Farben, erstellt von YarnSpace" loading="lazy">
                             <img class="compare-before" src="../assets/img/shots/photo-chart-before.webp" width="880" height="880" alt="Das YarnSpace-App-Icon: ein Wollknäuel mit Stricknadel und Häkelnadel" loading="lazy">
                             <span class="compare-label before" aria-hidden="true">Bild</span>
                             <span class="compare-label after" aria-hidden="true">Zählmuster</span>
@@ -275,8 +278,9 @@
                     </div>
                 </div>
                 <div class="highlight">
-                    <div class="highlight-art" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M8 9h8M8 12h6M8 15h7"/></svg>
+                    <div class="highlight-art scan-art" aria-hidden="true">
+                        <div class="yarn-label"><strong>MERINO SOFT</strong><span>Rost · Farbe 0412 · Partie 77</span><span>100 % Merinowolle</span><span>50 g · 125 m</span><span>Nadeln 4 mm · 22 M × 30 R</span><i class="scan-line"></i></div>
+                        <div class="scan-chips"><span style="--i: 0">Merino Soft</span><span style="--i: 1">Rost 0412</span><span style="--i: 2">125 m / 50 g</span><span style="--i: 3">4 mm</span></div>
                     </div>
                     <div>
                         <span class="eyebrow">Banderolen-Scan</span>
@@ -286,8 +290,13 @@
                     </div>
                 </div>
                 <div class="highlight reverse">
-                    <div class="highlight-art" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9.5 10.5l2 2 4-4.5"/></svg>
+                    <div class="highlight-art stash-art" aria-hidden="true">
+                        <div class="stash-card">
+                            <strong>Herbst-Cardigan</strong><span class="stash-needs">Braucht 8 Knäuel DK</span>
+                            <div class="stash-row"><i></i><span>Merino Soft · Rost</span><b>9 Knäuel</b></div>
+                            <div class="stash-bar"><i></i></div>
+                            <div class="stash-ok">✓ Reicht, 1 Knäuel übrig</div>
+                        </div>
                     </div>
                     <div>
                         <span class="eyebrow">Vorrat-Check</span>
@@ -587,6 +596,8 @@
     })();
     </script>
     <script>
+    // The strand in the hero: its length, for drawing it in (see the styles).
+    document.querySelectorAll(".hero-thread path").forEach(path => path.style.setProperty("--len", path.getTotalLength()));
     // Photo to Chart: the range input moves the line between the picture and the chart.
     document.querySelectorAll("[data-compare]").forEach(compare => {
         const range = compare.querySelector("input");
@@ -610,6 +621,7 @@
             pending = pending.filter(item => {
                 if (item.getBoundingClientRect().top > limit) return true;
                 item.classList.add("is-visible");
+                if (item.style.transitionDelay) setTimeout(() => { item.style.transitionDelay = ""; }, 1000);
                 return false;
             });
             if (!pending.length) { removeEventListener("scroll", queue); removeEventListener("resize", queue); }

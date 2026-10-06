@@ -111,25 +111,6 @@ body:has(.hero) .site-header { margin-bottom: -58px; }
     width: 128px; height: 128px; margin: 0 auto 28px;
     border-radius: 29px; box-shadow: 0 18px 40px rgba(90, 70, 200, 0.35);
 }
-/* The pill above the headline that points to what's new. */
-.hero-new {
-    display: inline-flex; align-items: center; gap: 8px; margin: -6px 0 20px; padding: 5px 14px 5px 5px;
-    border-radius: 999px; font-size: 0.92rem; font-weight: 500; color: var(--text); text-decoration: none;
-    background: color-mix(in srgb, var(--surface) 70%, transparent); border: 1px solid var(--border);
-    box-shadow: var(--shadow); backdrop-filter: blur(10px);
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-.hero-new span:first-child {
-    padding: 3px 10px; border-radius: 999px; background: var(--gradient); color: #fff;
-    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
-}
-.hero-new:hover { transform: translateY(-1px); border-color: rgba(138, 79, 220, 0.45); }
-.hero-new span:last-child { transition: transform 0.2s ease; }
-.hero-new:hover span:last-child { transform: translateX(3px); }
-#photo-to-chart { scroll-margin-top: 110px; }
-/* Right after the name, without the flex gap in between. */
-.hero-new-more { margin-left: -8px; }
-@media (max-width: 560px) { .hero-new-more { display: none; } }
 .hero h1 {
     font-size: clamp(2.2rem, 5.5vw, 3.8rem);
     line-height: 1.08; letter-spacing: -0.02em;
@@ -230,25 +211,26 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 
 /* Apple Watch with a sport band. Sizes in cqw (hundredths of the watch's width) so the corners
    stay concentric: display 18.3, plus the black glass around it (6.5) = 24.8, plus the aluminum
-   edge (1.8) = 26.6. The bands run out of the art box and darken where they curve away. */
+   edge (1.8) = 26.6. The band is shaped like the real sport band: about 55 % of the case's width
+   away from the watch, flaring in a long concave curve that meets the case's rounded corner at 80 %
+   of the width, heading the way the corner goes on there (about 39° below level), so the band's
+   edge runs on into the case's outline without a notch (an SVG mask, stretched to the band). It keeps
+   its color up to the case, darkens as it curves away behind the wrist and runs out of the art box.
+   The lower band is the upper one flipped. The bands are child elements, not ::before/::after of
+   .watch: Safari doesn't resolve cqw in a container's own pseudo-elements against it. */
 .watch { position: relative; z-index: 1; width: 29%; container-type: inline-size; }
-.watch::before, .watch::after {
-    content: ""; position: absolute; left: 50%; transform: translateX(-50%); z-index: -1;
-    width: 58cqw; height: 100cqw; border-radius: 7cqw;
-    background-color: #e6dfcf;
+.watch .band {
+    position: absolute; left: 50%; z-index: -1;
+    width: 88cqw; height: 100cqw; bottom: calc(100% - 22cqw);
+    transform: translateX(-50%);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 100' preserveAspectRatio='none'%3E%3Cpath d='M17.5 0H70.5L71.5 50C71.5 68 75 76.6 84 83.8L87 88V100H1V88L4 83.8C13 76.6 16.5 68 16.5 50Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 100' preserveAspectRatio='none'%3E%3Cpath d='M17.5 0H70.5L71.5 50C71.5 68 75 76.6 84 83.8L87 88V100H1V88L4 83.8C13 76.6 16.5 68 16.5 50Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    background:
+        linear-gradient(to top, rgba(20, 15, 40, 0.3) 22cqw, rgba(20, 15, 40, 0.06) 23cqw, transparent 24.5cqw),
+        linear-gradient(to bottom, rgba(30, 20, 60, 0.45), transparent 45%),
+        linear-gradient(to right, #aaa18c 2%, #c9c1ae 15%, #e2dbcb 28%, #efe9dc 50%, #e2dbcb 72%, #c9c1ae 85%, #aaa18c 98%);
 }
-.watch::before {
-    bottom: calc(100% - 22cqw);
-    background-image:
-        linear-gradient(to top, transparent 55%, rgba(30, 20, 60, 0.5)),
-        linear-gradient(to right, #b3aa96, #ddd5c3 15%, #efe9dc 50%, #ddd5c3 85%, #b3aa96);
-}
-.watch::after {
-    top: calc(100% - 22cqw);
-    background-image:
-        linear-gradient(to bottom, transparent 55%, rgba(30, 20, 60, 0.5)),
-        linear-gradient(to right, #b3aa96, #ddd5c3 15%, #efe9dc 50%, #ddd5c3 85%, #b3aa96);
-}
+.watch .band.bottom { bottom: auto; top: calc(100% - 22cqw); transform: translateX(-50%) scaleY(-1); }
 .watch-case {
     position: relative; padding: 6.5cqw; border: 1.8cqw solid transparent; border-radius: 26.6cqw;
     background:
@@ -260,13 +242,6 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
         0 26px 52px rgba(20, 12, 70, 0.42);
 }
 .watch-case img { display: block; width: 100%; height: auto; border-radius: 18.3cqw; }
-/* The holes of the lower band, starting a little below the case. */
-.watch-case::after {
-    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
-    top: calc(100% + 1.8cqw + 20cqw); width: 2.8cqw; height: 80cqw;
-    background: radial-gradient(circle, rgba(70, 60, 45, 0.55) 0 0.95cqw, rgba(70, 60, 45, 0.2) 1.1cqw, transparent 1.3cqw)
-        center top / 2.8cqw 8.5cqw repeat-y;
-}
 /* Photo to Chart: the picture on the left of the line, the chart on the right. A transparent
    range input on top does the dragging (and works with the keyboard). */
 .compare {
@@ -298,15 +273,11 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 }
 .compare:has(input:focus-visible) .compare-handle::after { outline: 3px solid #fff; outline-offset: 3px; }
 
-/* The Digital Crown (ridged, sitting on the aluminum edge) and the long, flat side button below
-   it, which only just stands out of the case. */
+/* The Digital Crown on the aluminum edge, and the long, flat side button below it, which only
+   just stands out of the case. */
 .watch-case .crown {
-    position: absolute; right: -6.2cqw; top: 18%; width: 4.4cqw; height: 16cqw;
-    border-radius: 0.8cqw 1.4cqw 1.4cqw 0.8cqw;
-    background:
-        repeating-linear-gradient(to bottom, rgba(40, 40, 48, 0.32) 0 0.35cqw, transparent 0.35cqw 0.9cqw),
-        linear-gradient(to right, #8a8a93, #ececf0 55%, #9d9da5);
-    box-shadow: 0 0 0 0.5px rgba(30, 30, 40, 0.45);
+    position: absolute; right: -6.2cqw; top: 25%; width: 4.4cqw; height: 15cqw; border-radius: 1.4cqw;
+    background: linear-gradient(to right, #6e6e76, #c9c9d0 55%, #7d7d85);
 }
 .watch-case .crown::after {
     content: ""; position: absolute; left: 0; top: 25cqw; width: 1.4cqw; height: 27cqw;
@@ -511,9 +482,10 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
     border-radius: 0 0 1.4cqw 1.4cqw / 0 0 1.1cqw 1.1cqw;
     background: linear-gradient(to bottom, #9c9ca4, #c6c6cc);
 }
-/* A soft shadow on the table. */
-.mac::after {
-    content: ""; position: absolute; left: 0; right: 0; bottom: -1.6cqw; height: 2.4cqw; z-index: -1;
+/* A soft shadow on the table (on the base, not .mac::after: Safari doesn't resolve cqw in a
+   container's own pseudo-elements). */
+.mac .base::after {
+    content: ""; position: absolute; left: 5.4%; right: 5.4%; bottom: -1.6cqw; height: 2.4cqw; z-index: -1;
     background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent);
     filter: blur(6px);
 }
@@ -615,8 +587,82 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
    with reduced motion, nothing is hidden). */
 .reveal :is(.section-head, .feature-grid .card, .highlight, .plan, .faq details, .final-cta .container) {
     opacity: 0; transform: translateY(26px);
-    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), translate 0.25s ease, box-shadow 0.25s ease;
 }
 .reveal :is(.section-head, .feature-grid .card, .highlight, .plan, .faq details, .final-cta .container).is-visible {
     opacity: 1; transform: none;
+}
+
+/* Yarn label scan: a drawn label with a scan line running over it, and what was read off it
+   popping up below as chips (once the section comes into view). */
+.scan-art, .stash-art { align-content: center; gap: 18px; }
+.yarn-label {
+    position: relative; z-index: 1; overflow: hidden; width: min(62%, 300px); padding: 16px 18px 16px 26px;
+    display: grid; gap: 2px; text-align: left; color: #4a3b33; font-size: clamp(0.72rem, 1.3vw, 0.9rem); line-height: 1.45;
+    background: linear-gradient(160deg, #fbf6ec, #efe5d3); border-radius: 10px; transform: rotate(-3deg);
+    box-shadow: 0 16px 34px rgba(20, 12, 70, 0.35), inset 0 0 0 1px rgba(120, 90, 60, 0.12);
+}
+/* The band of color down the label's left edge. */
+.yarn-label::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: linear-gradient(#cf7446, #a9522c); }
+.yarn-label strong { font-size: 1.3em; letter-spacing: 0.14em; color: #2f241e; margin-bottom: 2px; }
+.scan-line {
+    position: absolute; left: 0; right: 0; top: 8%; height: 2px;
+    background: linear-gradient(90deg, transparent, #6fdcff 20%, #b7f0ff 50%, #6fdcff 80%, transparent);
+    box-shadow: 0 0 14px 3px rgba(111, 220, 255, 0.55);
+    animation: scan-line 2.6s ease-in-out infinite alternate;
+}
+@keyframes scan-line { to { top: 90%; } }
+.scan-chips { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 86%; }
+.scan-chips span {
+    padding: 4px 11px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; color: #3b2f7a;
+    background: rgba(255, 255, 255, 0.92); box-shadow: 0 6px 16px rgba(20, 12, 70, 0.25);
+}
+.scan-chips span::before { content: "✓ "; color: #2e9d5b; }
+.reveal .highlight:not(.is-visible) .scan-chips span { opacity: 0; }
+.reveal .highlight.is-visible .scan-chips span { animation: chip-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(0.7s + var(--i) * 0.28s); }
+@keyframes chip-in { from { opacity: 0; transform: translateY(10px) scale(0.92); } }
+
+/* Stash check: a small card like the app's, with the bar filling up once in view. */
+.stash-card {
+    position: relative; z-index: 1; width: min(68%, 330px); padding: 20px 22px; border-radius: 20px;
+    display: grid; gap: 4px; text-align: left; color: #1d1b2c; background: #fff;
+    box-shadow: 0 18px 40px rgba(20, 12, 70, 0.35);
+}
+.stash-card strong { font-size: 1.12rem; }
+.stash-needs { color: #6b6782; font-size: 0.88rem; }
+.stash-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 0.92rem; }
+.stash-row i { width: 22px; height: 22px; border-radius: 50%; flex: none; background: radial-gradient(circle at 35% 30%, #f0a37a, #b85a31); }
+.stash-row span { flex: 1; }
+.stash-bar { height: 8px; border-radius: 999px; background: #ece8f6; overflow: hidden; margin-top: 4px; }
+.stash-bar i { display: block; height: 100%; width: 100%; border-radius: inherit; background: linear-gradient(90deg, #4b78ec, #8a4fdc); }
+.reveal .highlight:not(.is-visible) .stash-bar i { width: 0; }
+.reveal .highlight.is-visible .stash-bar i { animation: bar-fill 1.1s 0.5s cubic-bezier(0.3, 0.7, 0.2, 1) both; }
+@keyframes bar-fill { from { width: 0; } }
+.stash-ok { margin-top: 8px; color: #2e9d5b; font-weight: 600; font-size: 0.92rem; }
+
+/* A strand of yarn through the hero, drawn in once when the page opens. */
+.hero-thread {
+    position: absolute; left: 0; top: 0; width: 100%; height: 640px; z-index: -1; pointer-events: none;
+    fill: none; stroke-linecap: round;
+}
+/* The drawing-in dashes the strand with its real length, which the script measures into --len
+   (Safari ignores pathLength for dashes set in CSS, and the strand never showed). Without it, no
+   dashes: the strand is just there. The SVG scales evenly (slice), so no non-scaling-stroke. */
+.hero-thread path { stroke-dasharray: var(--len, none); }
+.hero-thread .strand { stroke: rgba(185, 155, 255, 0.32); stroke-width: 2.5; }
+.hero-thread .ply { stroke: rgba(245, 164, 138, 0.28); stroke-width: 1.5; }
+/* Drawn in by the animation alone (from hidden), so where it doesn't run the strand is simply there. */
+@media (prefers-reduced-motion: no-preference) {
+    .hero-thread path { animation: thread-in 2.8s 0.2s cubic-bezier(0.45, 0.1, 0.2, 1) backwards; }
+    .hero-thread .ply { animation-delay: 0.45s; }
+}
+@keyframes thread-in { from { stroke-dashoffset: var(--len, 0); } to { stroke-dashoffset: 0; } }
+
+/* Cards lift a little under the pointer (translate, so it doesn't fight the fade-in's transform). */
+.feature-grid .card, .plan { transition: translate 0.25s ease, box-shadow 0.25s ease, opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+@media (hover: hover) {
+    .feature-grid .card:hover, .plan:hover { translate: 0 -4px; box-shadow: 0 20px 44px rgba(70, 60, 160, 0.18); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .scan-line { animation: none; top: 46%; }
 }

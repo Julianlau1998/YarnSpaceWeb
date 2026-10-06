@@ -85,9 +85,12 @@
 
     <main id="main">
         <section class="hero">
+            <svg class="hero-thread" viewBox="0 0 1440 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <path class="strand" d="M-40 470 C 160 330, 330 560, 520 420 S 860 170, 1040 300 S 1330 500, 1480 250"/>
+                <path class="ply" d="M-40 482 C 170 350, 330 575, 530 432 S 870 186, 1050 316 S 1335 512, 1480 266"/>
+            </svg>
             <div class="container">
                 <img class="hero-icon" src="assets/img/icon-512.png" width="128" height="128" alt="YarnSpace app icon: a ball of yarn with a knitting needle and a crochet hook">
-                <a class="hero-new" href="#photo-to-chart"><span>New</span> Photo to Chart<span class="hero-new-more">: any picture as a chart</span> <span aria-hidden="true">→</span></a>
                 <h1>The <span class="gradient-text">knitting &amp; crochet</span> app for everything you make</h1>
                 <p class="lead">Count rows, keep your yarn stash in order, find patterns on Ravelry and yarn that knits up the same. YarnSpace brings your projects, patterns and yarn together on iPhone, iPad, Mac and Apple Watch.</p>
                 <div class="cta">
@@ -245,7 +248,7 @@
             <div class="container">
                 <div class="highlight">
                     <div class="highlight-art watch-art">
-                        <div class="watch"><div class="watch-case"><img src="assets/img/shots/en-watch-counter.webp" width="416" height="496" alt="YarnSpace on Apple Watch: the row counter of a project at row 42 of 120" loading="lazy"><span class="crown" aria-hidden="true"></span></div></div>
+                        <div class="watch"><span class="band" aria-hidden="true"></span><span class="band bottom" aria-hidden="true"></span><div class="watch-case"><img src="assets/img/shots/en-watch-counter.webp" width="416" height="496" alt="YarnSpace on Apple Watch: the row counter of a project at row 42 of 120" loading="lazy"><span class="crown" aria-hidden="true"></span></div></div>
                     </div>
                     <div>
                         <span class="eyebrow">Apple Watch</span>
@@ -258,7 +261,7 @@
                 <div class="highlight reverse" id="photo-to-chart">
                     <div class="highlight-art chart-art">
                         <div class="compare" data-compare>
-                            <img class="compare-after" src="assets/img/shots/photo-chart-after.webp" width="880" height="880" alt="The same picture as a chart of 60 by 60 stitches in 8 colors, made by YarnSpace" loading="lazy">
+                            <img class="compare-after" src="assets/img/shots/photo-chart-after.webp" width="880" height="880" alt="The same picture as a chart of 60 by 60 stitches in 6 colors, made by YarnSpace" loading="lazy">
                             <img class="compare-before" src="assets/img/shots/photo-chart-before.webp" width="880" height="880" alt="The YarnSpace app icon: a ball of yarn with a knitting needle and a crochet hook" loading="lazy">
                             <span class="compare-label before" aria-hidden="true">Picture</span>
                             <span class="compare-label after" aria-hidden="true">Chart</span>
@@ -275,8 +278,9 @@
                     </div>
                 </div>
                 <div class="highlight">
-                    <div class="highlight-art" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M8 9h8M8 12h6M8 15h7"/></svg>
+                    <div class="highlight-art scan-art" aria-hidden="true">
+                        <div class="yarn-label"><strong>MERINO SOFT</strong><span>Rust · Color 0412 · Lot 77</span><span>100 % merino wool</span><span>50 g · 125 m</span><span>Needles 4 mm · 22 sts × 30 rows</span><i class="scan-line"></i></div>
+                        <div class="scan-chips"><span style="--i: 0">Merino Soft</span><span style="--i: 1">Rust 0412</span><span style="--i: 2">125 m / 50 g</span><span style="--i: 3">4 mm</span></div>
                     </div>
                     <div>
                         <span class="eyebrow">Yarn label scan</span>
@@ -286,8 +290,13 @@
                     </div>
                 </div>
                 <div class="highlight reverse">
-                    <div class="highlight-art" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9.5 10.5l2 2 4-4.5"/></svg>
+                    <div class="highlight-art stash-art" aria-hidden="true">
+                        <div class="stash-card">
+                            <strong>Autumn Cardigan</strong><span class="stash-needs">Calls for 8 skeins of DK</span>
+                            <div class="stash-row"><i></i><span>Merino Soft · Rust</span><b>9 skeins</b></div>
+                            <div class="stash-bar"><i></i></div>
+                            <div class="stash-ok">✓ Enough, with 1 to spare</div>
+                        </div>
                     </div>
                     <div>
                         <span class="eyebrow">Stash check</span>
@@ -587,6 +596,8 @@
     })();
     </script>
     <script>
+    // The strand in the hero: its length, for drawing it in (see the styles).
+    document.querySelectorAll(".hero-thread path").forEach(path => path.style.setProperty("--len", path.getTotalLength()));
     // Photo to Chart: the range input moves the line between the picture and the chart.
     document.querySelectorAll("[data-compare]").forEach(compare => {
         const range = compare.querySelector("input");
@@ -610,6 +621,7 @@
             pending = pending.filter(item => {
                 if (item.getBoundingClientRect().top > limit) return true;
                 item.classList.add("is-visible");
+                if (item.style.transitionDelay) setTimeout(() => { item.style.transitionDelay = ""; }, 1000);
                 return false;
             });
             if (!pending.length) { removeEventListener("scroll", queue); removeEventListener("resize", queue); }
