@@ -7,6 +7,13 @@ Static website for the YarnSpace app. Plain HTML and CSS, no build step and no e
 | Home | `/` | `/de/` |
 | Privacy policy | `/privacy/` | `/de/datenschutz/` |
 | Imprint | `/imprint/` | `/de/impressum/` |
+| Guides (overview) | `/guides/` | `/de/ratgeber/` |
+| Guide: substitute yarn | `/guides/substitute-yarn/` | `/de/ratgeber/garn-ersetzen/` |
+| Guide: photo to chart | `/guides/photo-to-chart/` | `/de/ratgeber/foto-zu-zaehlmuster/` |
+| Guide: gauge swatch | `/guides/gauge-swatch/` | `/de/ratgeber/maschenprobe/` |
+| Guide: increase/decrease evenly | `/guides/increase-decrease-evenly/` | `/de/ratgeber/gleichmaessig-zu-und-abnehmen/` |
+| Guide: needle sizes | `/guides/needle-sizes/` | `/de/ratgeber/nadelstaerken/` |
+| Guide: how much yarn | `/guides/how-much-yarn/` | `/de/ratgeber/garnmenge-berechnen/` |
 
 ## Before going live
 
@@ -14,6 +21,7 @@ Static website for the YarnSpace app. Plain HTML and CSS, no build step and no e
 - Fill the US transfer placeholder in both privacy pages, the same as in the app (`PrivacyPolicyView.swift`).
 - If you host somewhere other than GitHub Pages, update the "This website" / "Diese Website" section.
 - Keep the privacy texts in sync with the app.
+- New guide: add it to both overview pages, the guides section on both home pages, every guide's "More guides" list and `sitemap.xml` (with the hreflang pair).
 
 ## Hosting (GitHub Pages)
 
