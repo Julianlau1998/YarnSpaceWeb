@@ -402,6 +402,18 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 @media (max-width: 640px) {
     .device-stage { width: calc(100% + 24px); margin-left: -12px; margin-top: 44px; }
 }
+/* Wide screens: the showcase stays in the middle of the screen while the page scrolls through
+   a tall track, one stretch per screen (see the script at the end of the page). The phone is
+   sized to fit the screen's height. */
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+    .showcase-track { height: calc(var(--screens) * 55vh + 100vh); }
+    .showcase {
+        position: sticky; top: max(84px, calc(50vh - 360px));
+        min-height: min(720px, calc(100vh - 110px));
+    }
+    .showcase-phone .iphone { max-width: min(320px, calc((100vh - 150px) / 2.08)); }
+}
+
 @media (max-width: 900px) {
     .showcase { grid-template-columns: minmax(0, 1fr); gap: 28px; }
     .showcase-list {
