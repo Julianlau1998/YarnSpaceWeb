@@ -10,7 +10,8 @@
     <link rel="alternate" hreflang="de" href="https://yarnspace.app/de/">
     <link rel="alternate" hreflang="x-default" href="https://yarnspace.app/">
     <meta name="theme-color" content="#6a5fe4">
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/img/icon-96.png">
     <link rel="icon" type="image/png" sizes="192x192" href="../assets/img/icon-192.png">
     <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
     <link rel="manifest" href="../site.webmanifest">
@@ -421,6 +422,45 @@
         screenArea.addEventListener("scroll", () => {
             if (narrow.matches) show(Math.round(screenArea.scrollLeft / screenArea.clientWidth));
         }, { passive: true });
+        // A swipe anywhere on the showcase (next to the phone, on the caption) moves the
+        // screenshots too, following the finger; up and down still scroll the page (the
+        // showcase only takes sideways moves, see touch-action in the styles).
+        let drag = null;
+        showcase.addEventListener("touchstart", (event) => {
+            if (!narrow.matches || screenArea.contains(event.target) || event.touches.length > 1) return;
+            const touch = event.touches[0];
+            drag = { x: touch.clientX, y: touch.clientY, left: screenArea.scrollLeft, sideways: null };
+        }, { passive: true });
+        showcase.addEventListener("touchmove", (event) => {
+            if (!drag) return;
+            const touch = event.touches[0];
+            const dx = touch.clientX - drag.x, dy = touch.clientY - drag.y;
+            if (drag.sideways === null && Math.hypot(dx, dy) > 8) drag.sideways = Math.abs(dx) > Math.abs(dy);
+            if (!drag.sideways) return;
+            screenArea.style.scrollSnapType = "none";
+            screenArea.scrollLeft = drag.left - dx;
+        }, { passive: true });
+        const endDrag = (event) => {
+            if (!drag) return;
+            const moved = drag.sideways ? (event.changedTouches[0].clientX - drag.x) : 0;
+            screenArea.style.scrollSnapType = "";
+            if (drag.sideways) {
+                // Far enough, or quickly enough: the next one; else back to where it was.
+                const from = Math.round(drag.left / screenArea.clientWidth);
+                const step = Math.abs(moved) > Math.min(60, screenArea.clientWidth * 0.2) ? (moved < 0 ? 1 : -1) : 0;
+                swipeTo(Math.max(0, Math.min(tabs.length - 1, from + step)));
+            }
+            drag = null;
+        };
+        showcase.addEventListener("touchend", endDrag);
+        showcase.addEventListener("touchcancel", endDrag);
+        // All of them loaded once the showcase comes near: lazy images side by side only load
+        // as they slide into view, which made the swiping stutter.
+        new IntersectionObserver((entries, observer) => {
+            if (!entries[0].isIntersecting) return;
+            screens.forEach((img) => { img.loading = "eager"; });
+            observer.disconnect();
+        }, { rootMargin: "600px 0px" }).observe(showcase);
 
         // Wide: how far the track has been scrolled through, 0 at its start, 1 where it lets go.
         const stickyTop = () => parseFloat(getComputedStyle(showcase).top) || 0;
@@ -434,15 +474,23 @@
             return distance > 0 ? Math.max(0, Math.min(1, travelled / distance)) : 0;
         };
 
-        // Scrolling in fast from above: back to the start of the track, and the rest of that
-        // swipe's momentum is swallowed (until the wheel has been quiet for a moment).
-        let lastY = scrollY, holdUntil = 0, lastWheel = 0;
+        // Scrolling in from above: the showcase catches at its first screen, and the rest of
+        // that swipe's momentum is swallowed. Momentum comes as ever smaller steps; a step that
+        // grows again is a new swipe, which goes on at once (as does a pause in the steps).
+        let lastY = scrollY, lastWheel = 0, holding = false, lastStep = 0;
         addEventListener("wheel", (event) => {
-            lastWheel = performance.now();
-            if (performance.now() < holdUntil) {
-                event.preventDefault();
-                holdUntil = performance.now() + 160;
+            const now = performance.now(), step = Math.abs(event.deltaY);
+            if (holding) {
+                const pause = now - lastWheel > 180;
+                const newSwipe = step > lastStep * 1.25 + 3;
+                if (pause || newSwipe || event.deltaY < 0) {
+                    holding = false;
+                } else {
+                    event.preventDefault();
+                }
             }
+            lastWheel = now;
+            lastStep = step;
         }, { passive: false });
 
         let frame = 0;
@@ -452,13 +500,12 @@
                 frame = 0;
                 if (!scrolly.matches) { lastY = scrollY; return; }
                 const start = trackStart();
-                // Crossed into the track by more than a screen's stretch in one go, with the
-                // wheel or trackpad (not the links in the menu, which jump past on purpose).
-                const stretch = range() / tabs.length;
+                // Crossed into the track from above with the wheel or trackpad (not the links in
+                // the menu, which jump past on purpose).
                 const byWheel = performance.now() - lastWheel < 150;
-                if (byWheel && lastY < start - 2 && scrollY > start + stretch * 0.6) {
+                if (byWheel && lastY < start - 1 && scrollY > start + 1) {
                     scrollTo({ top: start, behavior: "instant" });
-                    holdUntil = performance.now() + 400;
+                    holding = true;
                 }
                 lastY = scrollY;
                 show(Math.floor(progress() * tabs.length * 0.999));

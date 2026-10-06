@@ -57,34 +57,46 @@ a { color: var(--purple); }
 /* Header */
 
 .site-header {
-    position: sticky; top: 0; z-index: 5;
-    backdrop-filter: saturate(180%) blur(18px);
-    -webkit-backdrop-filter: saturate(180%) blur(18px);
-    background: color-mix(in srgb, var(--bg) 78%, transparent);
-    border-bottom: 1px solid var(--border);
+    position: sticky; top: 10px; z-index: 5; padding: 10px 0 0; margin-top: -10px;
+    pointer-events: none;
 }
 .site-header .container {
+    pointer-events: auto;
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    height: 64px;
+    width: min(var(--max), calc(100% - 24px)); height: 58px; padding: 0 8px 0 14px;
+    border-radius: 999px; border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 72%, transparent);
+    backdrop-filter: saturate(180%) blur(22px);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+    box-shadow: 0 10px 30px rgba(20, 12, 70, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .brand {
     display: flex; align-items: center; gap: 10px;
     font-weight: 700; font-size: 1.15rem; color: var(--text); text-decoration: none;
 }
 .brand img { width: 34px; height: 34px; border-radius: 9px; }
-.site-nav { display: flex; align-items: center; gap: 22px; }
-.site-nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
-.site-nav a:hover { color: var(--text); }
-.lang-switch {
-    border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px;
+.site-nav { display: flex; align-items: center; gap: 4px; }
+.site-nav a {
+    color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 600;
+    padding: 8px 14px; border-radius: 999px; transition: background 0.2s ease, color 0.2s ease;
 }
+.site-nav a:hover { color: var(--text); background: color-mix(in srgb, var(--text) 8%, transparent); }
+.lang-switch {
+    margin-left: 6px; color: var(--text) !important;
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    box-shadow: inset 0 0 0 1px var(--border);
+}
+.lang-switch:hover { background: color-mix(in srgb, var(--text) 12%, transparent) !important; }
 @media (max-width: 720px) { .site-nav .nav-section { display: none; } }
 
 /* Hero */
 
+/* The hero runs on under the floating navigation, so its colors show around the capsule
+   (the capsule takes 58 px of the page's flow; that much less, and that much more padding). */
+body:has(.hero) .site-header { margin-bottom: -58px; }
 .hero {
     position: relative; overflow: hidden;
-    padding: 88px 0 96px;
+    padding: 146px 0 96px;
     text-align: center;
 }
 .hero::before {
@@ -298,7 +310,7 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 /* Dynamic Island, a touch smaller than the real one, centered on the status bar's time. */
 .iphone::after {
     content: ""; position: absolute; top: 2.95%; left: 50%; transform: translateX(-50%);
-    width: 26%; height: 3.05%; background: #000; border-radius: 999px;
+    width: 23.5%; height: 3.05%; background: #000; border-radius: 999px;
 }
 /* Action button and volume on the left, the side button on the right */
 .iphone::before {
@@ -323,30 +335,45 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
         0 24px 50px rgba(40, 30, 110, 0.28);
 }
 .ipad img {
-    display: block; width: 96.4%; margin: 1.8%;
+    display: block; width: 95.7%; margin: 2.15%;
     border-radius: 1.5% / 2%;
 }
 
+.mac { position: relative; }
 .mac .screen {
-    background: #0d0d10; border-radius: 2.6% / 4.2%; padding: 2.2% 2.2% 3%;
-    box-shadow: 0 30px 70px rgba(40, 30, 110, 0.28), inset 0 0 0 2px #2c2c33;
+    position: relative; padding: 2% 2% 10.5%;
+    border-radius: 2.2% / 3.2%;
+    background:
+        linear-gradient(to bottom, transparent calc(100% - 10.5%), #d9c9f5 calc(100% - 10.5%), #c9b2f0),
+        #f4f3f8;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+        0 0 0 1px rgba(90, 70, 150, 0.25),
+        0 30px 70px rgba(40, 30, 110, 0.32);
 }
+/* The black edge of the display itself, inside the white border. */
 .mac .wallpaper {
-    aspect-ratio: 16 / 10; border-radius: 0.6%;
+    position: relative; aspect-ratio: 16 / 9; border-radius: 0.5% / 0.9%;
     display: grid; place-items: center; overflow: hidden;
+    box-shadow: 0 0 0 2px #0b0b0e;
     background:
         radial-gradient(70% 90% at 15% 20%, #7aa0ff 0%, transparent 60%),
         radial-gradient(60% 80% at 90% 80%, #c08cff 0%, transparent 60%),
         linear-gradient(135deg, #4b78ec, #8a4fdc);
 }
-.mac .wallpaper img { width: 86%; filter: drop-shadow(0 14px 28px rgba(20, 10, 60, 0.35)); }
-.mac .base {
-    position: relative; width: 114%; margin-left: -7%; height: 0; padding-bottom: 3.4%;
-    background: linear-gradient(#e6e6ea, #b9b9c2); border-radius: 0 0 14% 14% / 0 0 100% 100%;
+/* The menu bar. */
+.mac .wallpaper::before {
+    content: ""; position: absolute; inset: 0 0 auto; height: 3%;
+    background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(8px);
 }
-.mac .base::before {
-    content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-    width: 14%; height: 40%; background: #c9c9d1; border-radius: 0 0 12px 12px;
+.mac .wallpaper img { width: 75%; margin-top: 2.5%; filter: drop-shadow(0 14px 28px rgba(20, 10, 60, 0.35)); }
+/* No stand: the panel on its own (the stand made the iMac look heavy next to the others). */
+.mac .base { display: none; }
+/* A soft shadow on the table. */
+.mac::after {
+    content: ""; position: absolute; left: 8%; right: 8%; bottom: -2.2%; height: 3%; z-index: -1;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent);
+    filter: blur(5px);
 }
 
 /* Screens showcase: the features on the left, one large iPhone on the right that shows the
@@ -413,9 +440,9 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 }
 
 @media (max-width: 900px) {
-    .showcase { grid-template-columns: minmax(0, 1fr); gap: 18px; justify-items: center; }
+    .showcase { grid-template-columns: minmax(0, 1fr); gap: 18px; justify-items: center; touch-action: pan-y; }
     .showcase-phone { order: 1; width: 100%; }
-    .showcase-phone .iphone { width: min(68vw, calc((100svh - 230px) / 2.12)); max-width: 300px; }
+    .showcase-phone .iphone { width: min(60vw, 280px); }
     .showcase-screens {
         display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
         -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
@@ -423,10 +450,10 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
     .showcase-screens::-webkit-scrollbar { display: none; }
     .showcase-screens img {
         position: static; flex: 0 0 100%; opacity: 1; transform: none; transition: none;
-        scroll-snap-align: center; scroll-snap-stop: always;
+        scroll-snap-align: center;
     }
     /* Only the shown feature's name and text, centered under the phone. */
-    .showcase-list { order: 2; display: block; text-align: center; min-height: 4.6em; max-width: 26em; }
+    .showcase-list { order: 2; display: block; text-align: center; height: 5.4em; max-width: 26em; overflow: hidden; }
     .showcase-item { display: none; padding: 0; background: none; box-shadow: none; cursor: default; text-align: center; }
     .showcase-item[aria-selected="true"] { display: grid; background: none; box-shadow: none; }
     .showcase-item::before { display: none; }
