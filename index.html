@@ -87,6 +87,7 @@
         <section class="hero">
             <div class="container">
                 <img class="hero-icon" src="assets/img/icon-512.png" width="128" height="128" alt="YarnSpace app icon: a ball of yarn with a knitting needle and a crochet hook">
+                <a class="hero-new" href="#photo-to-chart"><span>New</span> Photo to Chart<span class="hero-new-more">: any picture as a chart</span> <span aria-hidden="true">→</span></a>
                 <h1>The <span class="gradient-text">knitting &amp; crochet</span> app for everything you make</h1>
                 <p class="lead">Count rows, keep your yarn stash in order, find patterns on Ravelry and yarn that knits up the same. YarnSpace brings your projects, patterns and yarn together on iPhone, iPad, Mac and Apple Watch.</p>
                 <div class="cta">
@@ -243,6 +244,37 @@
         <section>
             <div class="container">
                 <div class="highlight">
+                    <div class="highlight-art watch-art">
+                        <div class="watch"><div class="watch-case"><img src="assets/img/shots/en-watch-counter.webp" width="416" height="496" alt="YarnSpace on Apple Watch: the row counter of a project at row 42 of 120" loading="lazy"><span class="crown" aria-hidden="true"></span></div></div>
+                    </div>
+                    <div>
+                        <span class="eyebrow">Apple Watch</span>
+                        <h3>Count rows on your wrist</h3>
+                        <p>Tap the plus after every row while your hands stay on the needles. Your watch gives a little tap with each row, and a stronger one when a row reminder is due.</p>
+                        <p>Swipe between the counters of a project, start the timer, and keep your row on the watch face with a widget. Everything stays in sync with your iPhone.</p>
+                        <p class="note">The Apple Watch app is part of YarnSpace Pro.</p>
+                    </div>
+                </div>
+                <div class="highlight reverse" id="photo-to-chart">
+                    <div class="highlight-art chart-art">
+                        <div class="compare" data-compare>
+                            <img class="compare-after" src="assets/img/shots/photo-chart-after.webp" width="880" height="880" alt="The same picture as a chart of 60 by 60 stitches in 8 colors, made by YarnSpace" loading="lazy">
+                            <img class="compare-before" src="assets/img/shots/photo-chart-before.webp" width="880" height="880" alt="The YarnSpace app icon: a ball of yarn with a knitting needle and a crochet hook" loading="lazy">
+                            <span class="compare-label before" aria-hidden="true">Picture</span>
+                            <span class="compare-label after" aria-hidden="true">Chart</span>
+                            <span class="compare-handle" aria-hidden="true"></span>
+                            <input type="range" min="0" max="100" value="50" aria-label="Compare the picture and the chart">
+                        </div>
+                    </div>
+                    <div>
+                        <span class="eyebrow">Photo to Chart</span>
+                        <h3>Any picture, ready to stitch</h3>
+                        <p>Pick a photo and YarnSpace turns it into a chart for colorwork knitting, tapestry crochet or cross-stitch. You choose the width in stitches and the number of colors; the cells follow your gauge, so the motif doesn't come out squashed.</p>
+                        <p>Work right from the chart and check off stitches as you go, or start a project with it.</p>
+                        <p class="note">Making charts is free. Saving them and checking off stitches is part of YarnSpace Pro.</p>
+                    </div>
+                </div>
+                <div class="highlight">
                     <div class="highlight-art" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M8 9h8M8 12h6M8 15h7"/></svg>
                     </div>
@@ -305,6 +337,7 @@
                             <li>All yarn substitutes</li>
                             <li>Stash check in patterns</li>
                             <li>Yarn label scan</li>
+                            <li>Save Photo to Chart charts and check off stitches</li>
                             <li>Project ideas and statistics</li>
                             <li>All 14 app colors</li>
                         </ul>
@@ -378,8 +411,8 @@
     // The screens showcase.
     // Wide screens: the page stops at the iPhone while you scroll, and the scrolling changes the
     // screen instead (the showcase sits in a tall track and stays put, sticky, until its last
-    // screen). Scrolling in fast from above catches at the first screen rather than racing
-    // through half of them. A feature on the left scrolls to its screen.
+    // screen). One swipe of the wheel or trackpad is one screen. A feature on the left scrolls
+    // to its screen.
     // Narrow screens: the screenshots are swiped inside the iPhone, with the feature's name and
     // dots below. With reduced motion, the features are buttons that change the screen.
     (() => {
@@ -417,19 +450,24 @@
             [index, index + 1].forEach((i) => { if (screens[i]) screens[i].loading = "eager"; });
         };
 
-        // Narrow: the screenshots side by side inside the phone.
-        const swipeTo = (index) => screenArea.scrollTo({ left: index * screenArea.clientWidth, behavior: "smooth" });
-        screenArea.addEventListener("scroll", () => {
-            if (narrow.matches) show(Math.round(screenArea.scrollLeft / screenArea.clientWidth));
-        }, { passive: true });
-        // A swipe anywhere on the showcase (next to the phone, on the caption) moves the
-        // screenshots too, following the finger; up and down still scroll the page (the
-        // showcase only takes sideways moves, see touch-action in the styles).
+        // Narrow: the screenshots side by side inside the phone, moved by the script with
+        // transforms, so a swipe feels the same on the phone and next to it (driving a scrolled
+        // box from a swipe next to it stuttered). It follows the finger, rubber-bands at the ends
+        // and goes on to the next one when swiped far or fast enough; up and down still scroll
+        // the page (touch-action in the styles).
+        const place = (offset = 0, animate = true) => {
+            screens.forEach((img) => {
+                img.style.transition = animate ? "" : "none";
+                img.style.transform = narrow.matches ? `translateX(calc(${-current * 100}% + ${offset}px))` : "";
+            });
+        };
+        const swipeTo = (index) => { show(index); place(); };
+        narrow.addEventListener("change", () => place(0, false));
         let drag = null;
         showcase.addEventListener("touchstart", (event) => {
-            if (!narrow.matches || screenArea.contains(event.target) || event.touches.length > 1) return;
+            if (!narrow.matches || event.touches.length > 1) return;
             const touch = event.touches[0];
-            drag = { x: touch.clientX, y: touch.clientY, left: screenArea.scrollLeft, sideways: null };
+            drag = { x: touch.clientX, y: touch.clientY, dx: 0, sideways: null, lastX: touch.clientX, lastTime: event.timeStamp, speed: 0 };
         }, { passive: true });
         showcase.addEventListener("touchmove", (event) => {
             if (!drag) return;
@@ -437,18 +475,21 @@
             const dx = touch.clientX - drag.x, dy = touch.clientY - drag.y;
             if (drag.sideways === null && Math.hypot(dx, dy) > 8) drag.sideways = Math.abs(dx) > Math.abs(dy);
             if (!drag.sideways) return;
-            screenArea.style.scrollSnapType = "none";
-            screenArea.scrollLeft = drag.left - dx;
+            // Speed in px per ms, smoothed over the last moves, for flicks.
+            const time = event.timeStamp - drag.lastTime;
+            if (time > 0) drag.speed = 0.6 * ((touch.clientX - drag.lastX) / time) + 0.4 * drag.speed;
+            drag.lastX = touch.clientX; drag.lastTime = event.timeStamp; drag.dx = dx;
+            const atEnd = (current === 0 && dx > 0) || (current === screens.length - 1 && dx < 0);
+            place(atEnd ? dx * 0.3 : dx, false);
         }, { passive: true });
-        const endDrag = (event) => {
+        const endDrag = () => {
             if (!drag) return;
-            const moved = drag.sideways ? (event.changedTouches[0].clientX - drag.x) : 0;
-            screenArea.style.scrollSnapType = "";
             if (drag.sideways) {
-                // Far enough, or quickly enough: the next one; else back to where it was.
-                const from = Math.round(drag.left / screenArea.clientWidth);
-                const step = Math.abs(moved) > Math.min(60, screenArea.clientWidth * 0.2) ? (moved < 0 ? 1 : -1) : 0;
-                swipeTo(Math.max(0, Math.min(tabs.length - 1, from + step)));
+                const far = Math.abs(drag.dx) > screenArea.clientWidth * 0.2;
+                const fast = Math.abs(drag.speed) > 0.35 && Math.sign(drag.speed) === Math.sign(drag.dx);
+                const step = far || fast ? (drag.dx < 0 ? 1 : -1) : 0;
+                show(current + step);
+                place();
             }
             drag = null;
         };
@@ -474,23 +515,45 @@
             return distance > 0 ? Math.max(0, Math.min(1, travelled / distance)) : 0;
         };
 
-        // Scrolling in from above: the showcase catches at its first screen, and the rest of
-        // that swipe's momentum is swallowed. Momentum comes as ever smaller steps; a step that
-        // grows again is a new swipe, which goes on at once (as does a pause in the steps).
-        let lastY = scrollY, lastWheel = 0, holding = false, lastStep = 0;
+        // Wide, with the wheel or trackpad: one swipe moves on by one screen, and the rest of its
+        // momentum is swallowed; only a very strong swipe goes further. Coming in from above or
+        // below, a swipe stops at the first or last screen. From there, a new swipe outwards lets
+        // the page scroll on. A swipe ends with a pause, a change of direction, or a step that
+        // grows again (a new swipe during the momentum of the last one).
+        const screenTop = (i) => trackStart() + range() * (i + 0.5) / tabs.length;
+        let gesture = null, lastWheel = 0, lastStep = 0, goal = -1, goalTime = 0;
         addEventListener("wheel", (event) => {
-            const now = performance.now(), step = Math.abs(event.deltaY);
-            if (holding) {
-                const pause = now - lastWheel > 180;
-                const newSwipe = step > lastStep * 1.25 + 3;
-                if (pause || newSwipe || event.deltaY < 0) {
-                    holding = false;
-                } else {
-                    event.preventDefault();
-                }
-            }
+            if (!scrolly.matches || event.ctrlKey || event.deltaY === 0) return;
+            const now = performance.now(), step = Math.abs(event.deltaY), dir = Math.sign(event.deltaY);
+            const fresh = !gesture || now - lastWheel > 200 || dir !== gesture.dir ||
+                (now - gesture.started > 160 && step > lastStep * 1.5 + 4);
             lastWheel = now;
             lastStep = step;
+            if (fresh) {
+                gesture = null;
+                const start = trackStart(), end = start + range(), y = scrollY, last = tabs.length - 1;
+                const entering = dir > 0 ? y < start - 2 && y + event.deltaY >= start - 2
+                                         : y > end + 2 && y + event.deltaY <= end + 2;
+                const inside = y >= start - 2 && y <= end + 2;
+                // Where it is: the screen the last swipe went to while the page may still be
+                // scrolling there, else the one in view.
+                const here = goal >= 0 && now - goalTime < 1000 ? goal : Math.floor(progress() * tabs.length * 0.999);
+                const outwards = (dir > 0 && here === last) || (dir < 0 && here === 0);
+                if (entering) gesture = { dir, base: dir > 0 ? 0 : last };
+                else if (inside && !outwards) gesture = { dir, base: here + dir };
+                if (!gesture) return;
+                Object.assign(gesture, { started: now, total: 0, target: -1 });
+            }
+            event.preventDefault();
+            gesture.total += step;
+            // A very strong swipe: one screen more for every 900 px past 2400.
+            const extra = gesture.total > 2400 ? Math.floor((gesture.total - 2400) / 900) + 1 : 0;
+            const target = Math.max(0, Math.min(tabs.length - 1, gesture.base + gesture.dir * extra));
+            if (target !== gesture.target) {
+                gesture.target = goal = target;
+                goalTime = now;
+                scrollTo({ top: screenTop(target), behavior: "smooth" });
+            }
         }, { passive: false });
 
         let frame = 0;
@@ -498,17 +561,7 @@
             if (frame) return;
             frame = requestAnimationFrame(() => {
                 frame = 0;
-                if (!scrolly.matches) { lastY = scrollY; return; }
-                const start = trackStart();
-                // Crossed into the track from above with the wheel or trackpad (not the links in
-                // the menu, which jump past on purpose).
-                const byWheel = performance.now() - lastWheel < 150;
-                if (byWheel && lastY < start - 1 && scrollY > start + 1) {
-                    scrollTo({ top: start, behavior: "instant" });
-                    holding = true;
-                }
-                lastY = scrollY;
-                show(Math.floor(progress() * tabs.length * 0.999));
+                if (scrolly.matches) show(Math.floor(progress() * tabs.length * 0.999));
             });
         };
         addEventListener("scroll", onScroll, { passive: true });
@@ -532,6 +585,41 @@
         show(0);
         onScroll();
     })();
+    </script>
+    <script>
+    // Photo to Chart: the range input moves the line between the picture and the chart.
+    document.querySelectorAll("[data-compare]").forEach(compare => {
+        const range = compare.querySelector("input");
+        const update = () => compare.style.setProperty("--pos", range.value + "%");
+        range.addEventListener("input", update);
+        update();
+    });
+    // Sections fade in as they scroll into view (not with reduced motion; without JavaScript
+    // everything simply stays visible, the class on <html> is what hides them first).
+    if (matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+        let pending = [...document.querySelectorAll(".section-head, .feature-grid .card, .highlight, .plan, .faq details, .final-cta .container")];
+        pending.forEach((item, i) => {
+            // Cards in one row come in one after the other.
+            if (item.matches(".card")) item.style.transitionDelay = (i % 3) * 70 + "ms";
+        });
+        // Everything that's in view or already above it shows (also after jumping to an anchor).
+        let queued = false;
+        const check = () => {
+            queued = false;
+            const limit = innerHeight * 0.92;
+            pending = pending.filter(item => {
+                if (item.getBoundingClientRect().top > limit) return true;
+                item.classList.add("is-visible");
+                return false;
+            });
+            if (!pending.length) { removeEventListener("scroll", queue); removeEventListener("resize", queue); }
+        };
+        const queue = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+        document.documentElement.classList.add("reveal");
+        check();
+        addEventListener("scroll", queue, { passive: true });
+        addEventListener("resize", queue);
+    }
     </script>
 </body>
 </html>
