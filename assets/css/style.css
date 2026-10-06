@@ -1081,3 +1081,23 @@ body { overflow-x: clip; }
 .guide-more ul { padding-left: 1.1em; }
 .guides-section .section-head { margin-bottom: 32px; }
 .guides-section .all-guides { text-align: center; margin: 24px 0 0; }
+
+/* Phones: nothing may stick out sideways (the watch band's full-width backdrop made the page 630 px
+   wide on a 390 px iPhone, so it could be pushed sideways). body's overflow-x alone isn't enough
+   in WebKit; clip doesn't make a scroll container, so the sticky header and showcase still work. */
+html { overflow-x: clip; }
+main > section { overflow-x: clip; }
+
+/* The mini counter on phones: full width (an earlier rule's width came after the phone one). */
+@media (max-width: 820px) { .mini-counter { width: 100%; } }
+
+/* The watch band on phones: the art is above the text there, so the long straps are cut at the
+   art's box instead of running over the heading. */
+@media (max-width: 820px) {
+    .highlight.band .highlight-art { overflow: hidden; }
+    .highlight.band { padding: 40px 0 48px; }
+}
+
+/* The comparison's labels in the top corners, over the sky, so they cover nothing of the motif. */
+.compare-label { bottom: auto; top: 12px; }
+@media (max-width: 820px) { .compare-label { top: 8px; } }
