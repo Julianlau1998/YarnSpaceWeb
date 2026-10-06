@@ -278,45 +278,43 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 .device-stage .iphone { position: absolute; right: 2%; bottom: 0; width: 15.5%; }
 
 /* The bezel is the image's margin: margins in % refer to the frame's own width, so the bezel
-   keeps its proportion at every size (padding would refer to the parent instead). Around it a
-   titanium edge in a few metal tones, the Dynamic Island and the side buttons, as on an
-   iPhone 17 Pro, so the phone also reads as one on the dark page. */
+   keeps its proportion at every size (padding would refer to the parent instead); flow-root
+   keeps those margins inside the frame. Proportioned like an iPhone 17 Pro: a thin display
+   border, a slim titanium edge, the Dynamic Island and the side buttons. */
 .iphone {
     position: relative; display: flow-root; background: #050506;
-    border-radius: 17.5% / 8.1%;
+    border-radius: 17.5% / 8.26%;
     box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-        0 0 0 1.5px #1c1c20,
-        0 0 0 3px #8e8e96,
-        0 0 0 4px #c9c9cf,
-        0 0 0 5px #55555c,
-        0 28px 56px rgba(20, 12, 70, 0.42);
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 0 0 1px #1c1c20,
+        0 0 0 2.5px #a3a3ab,
+        0 0 0 3.5px #5a5a61,
+        0 26px 52px rgba(20, 12, 70, 0.40);
 }
 .iphone img {
-    display: block; width: 91%; margin: 4.5%;
-    border-radius: 14% / 6.5%;
+    display: block; width: 95.2%; margin: 2.4%;
+    border-radius: 15.9% / 7.3%;
 }
-/* Dynamic Island */
+/* Dynamic Island, a touch smaller than the real one, centered on the status bar's time. */
 .iphone::after {
-    content: ""; position: absolute; top: 3.5%; left: 50%; transform: translateX(-50%);
-    width: 29%; height: 3.4%; background: #000; border-radius: 999px;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    content: ""; position: absolute; top: 2.95%; left: 50%; transform: translateX(-50%);
+    width: 26%; height: 3.05%; background: #000; border-radius: 999px;
 }
 /* Action button and volume on the left, the side button on the right */
 .iphone::before {
-    content: ""; position: absolute; left: -7px; top: 17%; width: 3px; height: 26%;
+    content: ""; position: absolute; left: -5.5px; top: 17%; width: 2.5px; height: 26%;
     border-radius: 2px 0 0 2px;
     background: linear-gradient(to bottom,
-        #9a9aa2 0 13%, transparent 13% 27%,
-        #9a9aa2 27% 58%, transparent 58% 66%,
-        #9a9aa2 66% 97%, transparent 97%);
+        #a3a3ab 0 13%, transparent 13% 27%,
+        #a3a3ab 27% 58%, transparent 58% 66%,
+        #a3a3ab 66% 97%, transparent 97%);
 }
 .iphone .side {
-    position: absolute; right: -7px; top: 26%; width: 3px; height: 13%;
-    border-radius: 0 2px 2px 0; background: #9a9aa2;
+    position: absolute; right: -5.5px; top: 26%; width: 2.5px; height: 13%;
+    border-radius: 0 2px 2px 0; background: #a3a3ab;
 }
-.device-stage .iphone::before { width: 2px; left: -6px; }
-.device-stage .iphone .side { width: 2px; right: -6px; }
+.device-stage .iphone::before { width: 2px; left: -5px; }
+.device-stage .iphone .side { width: 2px; right: -5px; }
 
 .ipad {
     display: flow-root; background: #0b0b0e;
@@ -325,7 +323,7 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
         0 24px 50px rgba(40, 30, 110, 0.28);
 }
 .ipad img {
-    display: block; width: 95.6%; margin: 2.2%;
+    display: block; width: 96.4%; margin: 1.8%;
     border-radius: 1.5% / 2%;
 }
 
@@ -387,8 +385,8 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 }
 .showcase-phone .iphone { width: 100%; max-width: 320px; margin: 0 auto; }
 .showcase-screens {
-    position: relative; width: 91%; margin: 4.5%; aspect-ratio: 600 / 1304;
-    border-radius: 14% / 6.5%; overflow: hidden; background: #f1effa;
+    position: relative; width: 95.2%; margin: 2.4%; aspect-ratio: 600 / 1304;
+    border-radius: 15.9% / 7.3%; overflow: hidden; background: #f1effa;
 }
 .showcase-screens img {
     position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border-radius: 0;
@@ -415,15 +413,30 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 }
 
 @media (max-width: 900px) {
-    .showcase { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-    .showcase-list {
-        grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto;
-        scroll-snap-type: x mandatory; padding: 4px 4px 10px; margin: 0 -4px;
-        -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    .showcase { grid-template-columns: minmax(0, 1fr); gap: 18px; justify-items: center; }
+    .showcase-phone { order: 1; width: 100%; }
+    .showcase-phone .iphone { width: min(68vw, calc((100svh - 230px) / 2.12)); max-width: 300px; }
+    .showcase-screens {
+        display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+        -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
     }
-    .showcase-list::-webkit-scrollbar { display: none; }
-    .showcase-item { scroll-snap-align: center; padding: 10px 16px; border-radius: 999px; }
-    .showcase-item span, .showcase-item::before { display: none; }
-    .showcase-item strong { font-size: 0.98rem; white-space: nowrap; }
-    .showcase-phone .iphone { max-width: 260px; }
+    .showcase-screens::-webkit-scrollbar { display: none; }
+    .showcase-screens img {
+        position: static; flex: 0 0 100%; opacity: 1; transform: none; transition: none;
+        scroll-snap-align: center; scroll-snap-stop: always;
+    }
+    /* Only the shown feature's name and text, centered under the phone. */
+    .showcase-list { order: 2; display: block; text-align: center; min-height: 4.6em; max-width: 26em; }
+    .showcase-item { display: none; padding: 0; background: none; box-shadow: none; cursor: default; text-align: center; }
+    .showcase-item[aria-selected="true"] { display: grid; background: none; box-shadow: none; }
+    .showcase-item::before { display: none; }
+    .showcase-dots { order: 3; display: flex; gap: 8px; }
+    .showcase-dots button {
+        width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; cursor: pointer;
+        background: var(--muted); opacity: 0.35; transition: width 0.25s ease, opacity 0.25s ease;
+    }
+    .showcase-dots button[aria-current="true"] { width: 22px; opacity: 1; background: var(--purple); }
+}
+@media (min-width: 901px) {
+    .showcase-dots { display: none; }
 }

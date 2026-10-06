@@ -374,18 +374,36 @@
         </div>
     </footer>
     <script>
-    // The screens showcase. On wide screens the page stops at the iPhone while you scroll, and
-    // the scrolling changes the screen instead: the showcase sits in a tall track and stays put
-    // (sticky) until its last screen. A feature on the left scrolls to its screen. On narrow
-    // screens (and with reduced motion) the features are buttons that change the screen.
+    // The screens showcase.
+    // Wide screens: the page stops at the iPhone while you scroll, and the scrolling changes the
+    // screen instead (the showcase sits in a tall track and stays put, sticky, until its last
+    // screen). Scrolling in fast from above catches at the first screen rather than racing
+    // through half of them. A feature on the left scrolls to its screen.
+    // Narrow screens: the screenshots are swiped inside the iPhone, with the feature's name and
+    // dots below. With reduced motion, the features are buttons that change the screen.
     (() => {
         const track = document.querySelector("[data-showcase-track]");
         const showcase = track && track.querySelector("[data-showcase]");
         if (!showcase) return;
         const tabs = [...showcase.querySelectorAll(".showcase-item")];
-        const screens = [...showcase.querySelectorAll(".showcase-screens img")];
+        const screenArea = showcase.querySelector(".showcase-screens");
+        const screens = [...screenArea.querySelectorAll("img")];
         const scrolly = matchMedia("(min-width: 901px) and (prefers-reduced-motion: no-preference)");
+        const narrow = matchMedia("(max-width: 900px)");
         let current = -1;
+
+        // Dots under the phone, for the narrow layout.
+        const dots = document.createElement("div");
+        dots.className = "showcase-dots";
+        const dotButtons = tabs.map((tab, i) => {
+            const dot = document.createElement("button");
+            dot.type = "button";
+            dot.setAttribute("aria-label", "Screen %d of %d".replace("%d", i + 1).replace("%d", tabs.length));
+            dot.addEventListener("click", () => swipeTo(i));
+            dots.append(dot);
+            return dot;
+        });
+        showcase.append(dots);
 
         const show = (index) => {
             index = Math.max(0, Math.min(tabs.length - 1, index));
@@ -393,26 +411,56 @@
             current = index;
             tabs.forEach((tab, i) => tab.setAttribute("aria-selected", String(i === index)));
             screens.forEach((img, i) => img.classList.toggle("is-active", i === index));
-            // The next one ready before it's scrolled to.
+            dotButtons.forEach((dot, i) => dot.setAttribute("aria-current", String(i === index)));
+            // The next one ready before it's needed.
             [index, index + 1].forEach((i) => { if (screens[i]) screens[i].loading = "eager"; });
-            // On narrow screens the features are a row of chips: that row follows, never the page.
-            const list = tabs[index].parentElement, tab = tabs[index];
-            if (list.scrollWidth > list.clientWidth) {
-                list.scrollTo({ left: tab.offsetLeft - (list.clientWidth - tab.offsetWidth) / 2, behavior: "smooth" });
-            }
         };
 
-        // How far the track has been scrolled through: 0 at its start, 1 where it lets go.
+        // Narrow: the screenshots side by side inside the phone.
+        const swipeTo = (index) => screenArea.scrollTo({ left: index * screenArea.clientWidth, behavior: "smooth" });
+        screenArea.addEventListener("scroll", () => {
+            if (narrow.matches) show(Math.round(screenArea.scrollLeft / screenArea.clientWidth));
+        }, { passive: true });
+
+        // Wide: how far the track has been scrolled through, 0 at its start, 1 where it lets go.
+        const stickyTop = () => parseFloat(getComputedStyle(showcase).top) || 0;
+        const trackStart = () => track.getBoundingClientRect().top + scrollY - stickyTop();
+        // The showcase sticks from when the track's top reaches its sticky offset until the
+        // track's end reaches the showcase's bottom: that stretch is the track minus the showcase.
+        const range = () => track.offsetHeight - showcase.offsetHeight;
         const progress = () => {
-            const box = track.getBoundingClientRect();
-            const distance = box.height - innerHeight;
-            return distance > 0 ? Math.max(0, Math.min(1, -box.top / distance)) : 0;
+            const distance = range();
+            const travelled = stickyTop() - track.getBoundingClientRect().top;
+            return distance > 0 ? Math.max(0, Math.min(1, travelled / distance)) : 0;
         };
+
+        // Scrolling in fast from above: back to the start of the track, and the rest of that
+        // swipe's momentum is swallowed (until the wheel has been quiet for a moment).
+        let lastY = scrollY, holdUntil = 0, lastWheel = 0;
+        addEventListener("wheel", (event) => {
+            lastWheel = performance.now();
+            if (performance.now() < holdUntil) {
+                event.preventDefault();
+                holdUntil = performance.now() + 160;
+            }
+        }, { passive: false });
+
         let frame = 0;
         const onScroll = () => {
-            if (!scrolly.matches || frame) return;
+            if (frame) return;
             frame = requestAnimationFrame(() => {
                 frame = 0;
+                if (!scrolly.matches) { lastY = scrollY; return; }
+                const start = trackStart();
+                // Crossed into the track by more than a screen's stretch in one go, with the
+                // wheel or trackpad (not the links in the menu, which jump past on purpose).
+                const stretch = range() / tabs.length;
+                const byWheel = performance.now() - lastWheel < 150;
+                if (byWheel && lastY < start - 2 && scrollY > start + stretch * 0.6) {
+                    scrollTo({ top: start, behavior: "instant" });
+                    holdUntil = performance.now() + 400;
+                }
+                lastY = scrollY;
                 show(Math.floor(progress() * tabs.length * 0.999));
             });
         };
@@ -421,11 +469,10 @@
         scrolly.addEventListener("change", onScroll);
 
         tabs.forEach((tab, i) => tab.addEventListener("click", () => {
+            if (narrow.matches) return swipeTo(i);
             if (!scrolly.matches) return show(i);
             // To the middle of this screen's stretch of the track.
-            const distance = track.offsetHeight - innerHeight;
-            const top = track.getBoundingClientRect().top + scrollY;
-            scrollTo({ top: top + distance * (i + 0.5) / tabs.length, behavior: "smooth" });
+            scrollTo({ top: trackStart() + range() * (i + 0.5) / tabs.length, behavior: "smooth" });
         }));
         showcase.querySelector(".showcase-list").addEventListener("keydown", (event) => {
             const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[event.key];
