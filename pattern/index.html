@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>A pattern shared from YarnSpace</title>
+    <meta name="description" content="A knitting or crochet pattern shared from YarnSpace, the app for your projects, patterns and yarn.">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#6a5fe4">
+    <meta property="og:title" content="A pattern shared from YarnSpace">
+    <meta property="og:description" content="See the pattern on Ravelry, and keep your rows, notes and yarn together in YarnSpace.">
+    <meta property="og:image" content="https://yarnspace.app/assets/img/og-image.png">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        /* A shared pattern: where it is (Ravelry) first, then what YarnSpace is. */
+        .shared { min-height: 70vh; display: grid; place-items: center; padding: 120px 0 60px; text-align: center; }
+        .shared .card { max-width: 520px; margin: 0 auto; padding: 32px 28px; }
+        .shared .eyebrow { display: block; margin-bottom: 10px; }
+        .shared h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); margin: 0 0 22px; overflow-wrap: anywhere; }
+        .shared .ravelry { display: inline-block; padding: 14px 24px; border-radius: 14px; font-weight: 700; text-decoration: none; color: #fff; background: linear-gradient(135deg, #4b78ec, #8a4fdc); }
+        .shared .pitch { margin: 34px 0 0; padding-top: 28px; border-top: 1px solid var(--border); }
+        .shared .pitch img.icon { display: block; margin: 0 auto; width: 64px; height: 64px; border-radius: 15px; }
+        .shared .pitch h2 { font-size: 1.3rem; margin: 12px 0 8px; }
+        .shared .pitch p { color: var(--muted); margin: 0 auto 18px; max-width: 30em; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a class="brand" href="/" data-home aria-label="YarnSpace">
+                <img src="/assets/img/icon-64.png" width="34" height="34" alt="">
+                YarnSpace
+            </a>
+        </div>
+    </header>
+
+    <main id="main" class="shared">
+        <div class="container">
+            <article class="card">
+                <span class="eyebrow" data-text="eyebrow">Shared from YarnSpace</span>
+                <h1 data-name>A pattern on Ravelry</h1>
+                <a class="ravelry" href="https://www.ravelry.com/patterns" data-ravelry data-text="ravelry">See the pattern on Ravelry</a>
+                <div class="pitch">
+                    <img class="icon" src="/assets/img/icon-192.png" width="64" height="64" alt="">
+                    <h2 data-text="title">Knit it with YarnSpace</h2>
+                    <p data-text="lead">Row counters, notes, your pattern and your yarn stash in one place, on iPhone, iPad, Mac and Apple Watch.</p>
+                    <div class="store-badge">
+                        <img src="/assets/img/badge-en-us.svg" width="162" height="54" alt="Download on the App Store" data-badge>
+                        <span class="soon" data-text="soon">Coming soon</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <script>
+        // The link is /pattern/<id>/<permalink>: the permalink names the pattern on Ravelry.
+        (function () {
+            var parts = location.pathname.split("/").filter(Boolean);
+            var slug = parts[0] === "pattern" && /^[A-Za-z0-9-]+$/.test(parts[2] || "") ? parts[2] : null;
+            if (slug) {
+                document.querySelector("[data-ravelry]").href = "https://www.ravelry.com/patterns/library/" + slug;
+                var name = slug.split("-").map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(" ");
+                document.querySelector("[data-name]").textContent = name;
+                document.title = name + " – YarnSpace";
+            }
+            if ((navigator.language || "").toLowerCase().indexOf("de") === 0) {
+                document.documentElement.lang = "de";
+                var de = {
+                    eyebrow: "Geteilt aus YarnSpace",
+                    ravelry: "Anleitung auf Ravelry ansehen",
+                    title: "Mit YarnSpace stricken und häkeln",
+                    lead: "Reihenzähler, Notizen, deine Anleitung und dein Garnvorrat an einem Ort, auf iPhone, iPad, Mac und Apple Watch.",
+                    soon: "Demnächst"
+                };
+                document.querySelectorAll("[data-text]").forEach(function (el) { el.textContent = de[el.dataset.text]; });
+                if (!slug) document.querySelector("[data-name]").textContent = "Eine Anleitung auf Ravelry";
+                document.querySelector("[data-badge]").src = "/assets/img/badge-de-de.svg";
+                document.querySelector("[data-badge]").alt = "Laden im App Store";
+                document.querySelector("[data-home]").href = "/de/";
+            }
+        })();
+    </script>
+</body>
+</html>

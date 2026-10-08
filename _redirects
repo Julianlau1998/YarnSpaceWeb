@@ -1,5 +1,4 @@
-# Shared patterns: with YarnSpace installed, the link opens the pattern in the app (see
-# .well-known/apple-app-site-association); without it, these send people on to Ravelry.
-/pattern/:id/:slug  https://www.ravelry.com/patterns/library/:slug  302
-/pattern/:id        https://www.ravelry.com/patterns              302
-/pattern/:id/       https://www.ravelry.com/patterns              302
+# Shared patterns (/pattern/<id>/<permalink>): with YarnSpace installed, the link opens the
+# pattern in the app (see .well-known/apple-app-site-association); without it, this page shows
+# the pattern's name, a link to it on Ravelry and what YarnSpace is.
+/pattern/*  /pattern/index.html  200
