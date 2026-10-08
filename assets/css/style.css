@@ -955,7 +955,8 @@ body { overflow-x: clip; }
 }
 #features > .container::before { width: 620px; height: 520px; left: -240px; top: 4%; background: color-mix(in srgb, var(--periwinkle) 22%, transparent); }
 #features > .container::after { width: 560px; height: 480px; right: -260px; bottom: -60px; background: color-mix(in srgb, var(--coral) 16%, transparent); }
-.mini-counter { width: min(300px, 56%); }
+/* As wide as its reminder needs (the German one ran out of the card), at least as before. */
+.mini-counter { width: max-content; min-width: min(300px, 56%); max-width: 100%; }
 .mc-reminder { white-space: nowrap; }
 
 /* No colored glow under the highlights after all: their normal soft shadow. */
@@ -1101,3 +1102,13 @@ main > section { overflow-x: clip; }
 /* The comparison's labels in the top corners, over the sky, so they cover nothing of the motif. */
 .compare-label { bottom: auto; top: 12px; }
 @media (max-width: 820px) { .compare-label { top: 8px; } }
+
+/* Phones: a calmer start page. The hero keeps the App Store badge as its one action (the
+   features follow right below anyway), the device line repeats the lead text, and the feature
+   cards show their title and one sentence; the details are in the screenshots further down. */
+@media (max-width: 600px) {
+    .hero-icon { width: 88px; height: 88px; }
+    .hero .button-secondary, .hero .platforms { display: none; }
+    .hero .trust { font-size: 0.85rem; gap: 6px 14px; }
+    .feature-grid .card ul, .feature-grid .mini-counter { display: none; }
+}

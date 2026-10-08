@@ -1,0 +1,4 @@
+# Lets iOS and macOS open shared pattern links (yarnspace.app/pattern/...) in YarnSpace.
+/.well-known/apple-app-site-association
+  Content-Type: application/json
+  Cache-Control: public, max-age=3600
