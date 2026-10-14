@@ -14,16 +14,19 @@
     <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
     <link rel="stylesheet" href="/assets/css/style.css">
     <style>
-        /* A shared pattern: where it is (Ravelry) first, then what YarnSpace is. */
-        .shared { min-height: 70vh; display: grid; place-items: center; padding: 120px 0 60px; text-align: center; }
-        .shared .card { max-width: 520px; margin: 0 auto; padding: 32px 28px; }
-        .shared .eyebrow { display: block; margin-bottom: 10px; }
-        .shared h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); margin: 0 0 22px; overflow-wrap: anywhere; }
-        .shared .ravelry { display: inline-block; padding: 14px 24px; border-radius: 14px; font-weight: 700; text-decoration: none; color: #fff; background: linear-gradient(135deg, #4b78ec, #8a4fdc); }
-        .shared .pitch { margin: 34px 0 0; padding-top: 28px; border-top: 1px solid var(--border); }
-        .shared .pitch img.icon { display: block; margin: 0 auto; width: 64px; height: 64px; border-radius: 15px; }
-        .shared .pitch h2 { font-size: 1.3rem; margin: 12px 0 8px; }
-        .shared .pitch p { color: var(--muted); margin: 0 auto 18px; max-width: 30em; }
+        /* A shared pattern for someone without the app: YarnSpace first (where to get it, what
+           it does), the pattern on Ravelry as a quiet link below. */
+        .shared { min-height: 70vh; display: grid; place-items: center; padding: 90px 0 48px; text-align: center; }
+        .shared .card { max-width: 520px; margin: 0 auto; padding: 34px 28px 28px; }
+        .shared img.icon { display: block; margin: 0 auto 14px; width: 76px; height: 76px; border-radius: 20px; box-shadow: 0 12px 30px rgba(70, 60, 160, 0.25); }
+        .shared .eyebrow { display: block; margin-bottom: 8px; }
+        .shared h1 { font-size: clamp(1.7rem, 6vw, 2.2rem); margin: 0 0 10px; overflow-wrap: anywhere; }
+        .shared .lead { color: var(--muted); margin: 0 auto 20px; max-width: 30em; }
+        .shared .perks { list-style: none; padding: 0; margin: 26px auto 0; display: grid; gap: 8px; text-align: left; max-width: 22em; }
+        .shared .perks li { padding-left: 1.5em; text-indent: -1.5em; }
+        .shared .perks li::before { content: "✓"; display: inline-block; width: 1.5em; text-indent: 0; color: #3fae93; font-weight: 800; }
+        .shared .store-badge img { height: 58px; }
+        .shared .ravelry { display: inline-block; margin-top: 22px; font-size: 0.92rem; color: var(--muted); }
     </style>
 </head>
 <body>
@@ -39,18 +42,20 @@
     <main id="main" class="shared">
         <div class="container">
             <article class="card">
-                <span class="eyebrow" data-text="eyebrow">Shared from YarnSpace</span>
-                <h1 data-name>A pattern on Ravelry</h1>
-                <a class="ravelry" href="https://www.ravelry.com/patterns" data-ravelry data-text="ravelry">See the pattern on Ravelry</a>
-                <div class="pitch">
-                    <img class="icon" src="/assets/img/icon-192.png" width="64" height="64" alt="">
-                    <h2 data-text="title">Knit it with YarnSpace</h2>
-                    <p data-text="lead">Row counters, notes, your pattern and your yarn stash in one place, on iPhone, iPad, Mac and Apple Watch.</p>
-                    <div class="store-badge">
-                        <img src="/assets/img/badge-en-us.svg" width="162" height="54" alt="Download on the App Store" data-badge>
-                        <span class="soon" data-text="soon">Coming soon</span>
-                    </div>
+                <img class="icon" src="/assets/img/icon-192.png" width="88" height="88" alt="">
+                <span class="eyebrow" data-text="eyebrow">Shared with you from YarnSpace</span>
+                <h1 data-name>A pattern</h1>
+                <p class="lead" data-text="lead">Knit or crochet it with YarnSpace, the app for your projects, patterns and yarn.</p>
+                <div class="store-badge">
+                    <img src="/assets/img/badge-en-us.svg" width="162" height="54" alt="Download on the App Store" data-badge>
+                    <span class="soon" data-text="soon">Coming soon</span>
                 </div>
+                <ul class="perks">
+                    <li data-text="perk1">Row counters with reminders, also on your wrist</li>
+                    <li data-text="perk2">Patterns from Ravelry and your own PDFs</li>
+                    <li data-text="perk3">Your yarn stash, scanned from the ball band</li>
+                </ul>
+                <a class="ravelry" href="https://www.ravelry.com/patterns" data-ravelry data-text="ravelry">Only see the pattern on Ravelry →</a>
             </article>
         </div>
     </main>
@@ -69,14 +74,16 @@
             if ((navigator.language || "").toLowerCase().indexOf("de") === 0) {
                 document.documentElement.lang = "de";
                 var de = {
-                    eyebrow: "Geteilt aus YarnSpace",
-                    ravelry: "Anleitung auf Ravelry ansehen",
-                    title: "Mit YarnSpace stricken und häkeln",
-                    lead: "Reihenzähler, Notizen, deine Anleitung und dein Garnvorrat an einem Ort, auf iPhone, iPad, Mac und Apple Watch.",
-                    soon: "Demnächst"
+                    eyebrow: "Mit dir geteilt aus YarnSpace",
+                    lead: "Strick oder häkel sie mit YarnSpace, der App für deine Projekte, Anleitungen und dein Garn.",
+                    perk1: "Reihenzähler mit Erinnerungen, auch am Handgelenk",
+                    perk2: "Anleitungen von Ravelry und eigene PDFs",
+                    perk3: "Dein Garnvorrat, per Banderole eingescannt",
+                    soon: "Demnächst",
+                    ravelry: "Nur die Anleitung auf Ravelry ansehen →"
                 };
                 document.querySelectorAll("[data-text]").forEach(function (el) { el.textContent = de[el.dataset.text]; });
-                if (!slug) document.querySelector("[data-name]").textContent = "Eine Anleitung auf Ravelry";
+                if (!slug) document.querySelector("[data-name]").textContent = "Eine Anleitung";
                 document.querySelector("[data-badge]").src = "/assets/img/badge-de-de.svg";
                 document.querySelector("[data-badge]").alt = "Laden im App Store";
                 document.querySelector("[data-home]").href = "/de/";
