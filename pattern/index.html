@@ -46,10 +46,9 @@
                 <span class="eyebrow" data-text="eyebrow">Shared with you from YarnSpace</span>
                 <h1 data-name>A pattern</h1>
                 <p class="lead" data-text="lead">Knit or crochet it with YarnSpace, the app for your projects, patterns and yarn.</p>
-                <div class="store-badge">
+                <a class="store-badge" href="https://apps.apple.com/app/id6818639384">
                     <img src="/assets/img/badge-en-us.svg" width="162" height="54" alt="Download on the App Store" data-badge>
-                    <span class="soon" data-text="soon">Coming soon</span>
-                </div>
+                </a>
                 <ul class="perks">
                     <li data-text="perk1">Row counters with reminders, also on your wrist</li>
                     <li data-text="perk2">Patterns from Ravelry and your own PDFs</li>
@@ -79,7 +78,6 @@
                     perk1: "Reihenzähler mit Erinnerungen, auch am Handgelenk",
                     perk2: "Anleitungen von Ravelry und eigene PDFs",
                     perk3: "Dein Garnvorrat, per Banderole eingescannt",
-                    soon: "Demnächst",
                     ravelry: "Nur die Anleitung auf Ravelry ansehen →"
                 };
                 document.querySelectorAll("[data-text]").forEach(function (el) { el.textContent = de[el.dataset.text]; });

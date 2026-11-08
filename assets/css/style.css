@@ -321,6 +321,7 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing:
 .final-cta .card { background: var(--gradient); color: #fff; border: 0; padding: 56px 28px; }
 .final-cta h2 { color: #fff; }
 .final-cta p { color: rgba(255, 255, 255, 0.88); max-width: 34em; margin: 0 auto 28px; font-size: 1.1rem; }
+.final-cta .store-badge { display: flex; width: fit-content; margin: 0 auto 22px; }
 
 /* Legal pages */
 
