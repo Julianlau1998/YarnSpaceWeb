@@ -15,21 +15,21 @@
     <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
     <link rel="stylesheet" href="/assets/css/style.css">
     <style>
-        /* An invitation to knit together, for someone whose YarnSpace didn't open the link
-           (not installed yet): first the app, then the invitation itself. */
-        .invite { min-height: 70vh; display: grid; place-items: center; padding: 90px 0 48px; text-align: center; }
-        .invite .card { max-width: 520px; margin: 0 auto; padding: 34px 28px 28px; }
-        .invite img.icon { display: block; margin: 0 auto 14px; width: 76px; height: 76px; border-radius: 20px; box-shadow: 0 12px 30px rgba(42, 138, 153, 0.28); }
-        .invite .eyebrow { display: block; margin-bottom: 8px; }
-        .invite h1 { font-size: clamp(1.7rem, 6vw, 2.2rem); margin: 0 0 10px; overflow-wrap: anywhere; }
-        .invite .lead { color: var(--muted); margin: 0 auto 26px; max-width: 30em; }
-        .invite ol { list-style: none; padding: 0; margin: 0 auto; display: grid; gap: 22px; max-width: 24em; text-align: left; }
-        .invite ol li { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; }
-        .invite .num { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #2a8a99; color: #fff; font-weight: 800; }
-        .invite .step-title { font-weight: 700; margin: 5px 0 10px; }
-        .invite .store-badge img { height: 52px; }
-        .invite .accept { display: inline-block; padding: 12px 22px; border-radius: 999px; background: #2a8a99; color: #fff; font-weight: 700; text-decoration: none; }
-        .invite .hint { color: var(--muted); font-size: 0.9rem; margin: 26px auto 0; max-width: 28em; }
+        /* An invitation to knit together, for someone whose YarnSpace didn't open the link (not
+           installed yet): compact, so both steps show without scrolling (the user's pick, A). */
+        .invite { padding: 84px 0 32px; }
+        .invite .card { max-width: 460px; margin: 0 auto; padding: 24px 20px; }
+        .invite .top { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+        .invite .top img { width: 56px; height: 56px; border-radius: 14px; box-shadow: 0 8px 20px rgba(42, 138, 153, 0.28); flex: none; }
+        .invite .eyebrow { display: block; font-size: 0.72rem; }
+        .invite h1 { font-size: 1.7rem; margin: 2px 0 0; overflow-wrap: anywhere; }
+        .invite .lead { color: var(--muted); margin: 0 0 18px; }
+        .invite .step { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 14px; border-radius: 18px; background: rgba(127, 127, 160, 0.12); margin-bottom: 10px; }
+        .invite .num { width: 30px; height: 30px; border-radius: 50%; background: #2a8a99; color: #fff; font-weight: 800; display: grid; place-items: center; }
+        .invite .step-title { font-weight: 700; margin: 3px 0 10px; }
+        .invite .store-badge img { height: 46px; }
+        .invite .accept { display: block; text-align: center; padding: 12px; border-radius: 999px; background: #2a8a99; color: #fff; font-weight: 700; text-decoration: none; }
+        .invite .hint { color: var(--muted); font-size: 0.85rem; margin: 12px 0 0; }
     </style>
 </head>
 <body>
@@ -45,28 +45,30 @@
     <main id="main" class="invite">
         <div class="container">
             <article class="card">
-                <img class="icon" src="/assets/img/icon-192.png" width="88" height="88" alt="">
-                <span class="eyebrow" data-text="eyebrow">Knit &amp; crochet together</span>
-                <h1 data-title>You're invited</h1>
+                <div class="top">
+                    <img src="/assets/img/icon-192.png" width="56" height="56" alt="">
+                    <div>
+                        <span class="eyebrow" data-text="eyebrow">Knit &amp; crochet together</span>
+                        <h1 data-title>You're invited</h1>
+                    </div>
+                </div>
                 <p class="lead" data-text="lead">Each of you works on your own project and sees the others' rows, photos and finish dates.</p>
-                <ol>
-                    <li>
-                        <span class="num">1</span>
-                        <div>
-                            <p class="step-title" data-text="step1">Get YarnSpace, it's free</p>
-                            <a class="store-badge" href="https://apps.apple.com/app/apple-store/id6818639384?pt=123943931&amp;ct=Invite&amp;mt=8">
-                                <img src="/assets/img/badge-en-us.svg" width="156" height="52" alt="Download on the App Store" data-badge>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="num">2</span>
-                        <div>
-                            <p class="step-title" data-text="step2">Then join the group</p>
-                            <a class="accept" href="https://www.icloud.com/" data-accept data-text="accept">Accept the invitation</a>
-                        </div>
-                    </li>
-                </ol>
+                <div class="step">
+                    <span class="num">1</span>
+                    <div>
+                        <p class="step-title" data-text="step1">Get YarnSpace, it's free</p>
+                        <a class="store-badge" href="https://apps.apple.com/app/apple-store/id6818639384?pt=123943931&amp;ct=Invite&amp;mt=8">
+                            <img src="/assets/img/badge-en-us.svg" width="138" height="46" alt="Download on the App Store" data-badge>
+                        </a>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="num">2</span>
+                    <div>
+                        <p class="step-title" data-text="step2">Then join the group</p>
+                        <a class="accept" href="https://www.icloud.com/" data-accept data-text="accept">Accept the invitation</a>
+                    </div>
+                </div>
                 <p class="hint" data-text="hint">Just installed YarnSpace? Come back to this page and tap “Accept the invitation”. If you already have the app, the link opens it right away.</p>
             </article>
         </div>
