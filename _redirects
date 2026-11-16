@@ -2,3 +2,6 @@
 # pattern in the app (see .well-known/apple-app-site-association); without it, this page shows
 # the pattern's name, a link to it on Ravelry and what YarnSpace is.
 /pattern/*  /pattern/index.html  200
+# Invitations to knit together (/join/<iCloud share code>?from=<name>): with YarnSpace
+# installed the link opens the app; without it, this page offers the App Store and the invitation.
+/join/*  /join/index.html  200
