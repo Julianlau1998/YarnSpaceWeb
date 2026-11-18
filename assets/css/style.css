@@ -1113,3 +1113,39 @@ main > section { overflow-x: clip; }
     .hero .trust { font-size: 0.85rem; gap: 6px 14px; }
     .feature-grid .card ul, .feature-grid .mini-counter { display: none; }
 }
+
+/* Values that used to sit in style attributes (the Content-Security-Policy allows no inline styles). */
+.showcase-track { --screens: 8; }
+.scan-chips span:nth-child(1) { --i: 0; }
+.scan-chips span:nth-child(2) { --i: 1; }
+.scan-chips span:nth-child(3) { --i: 2; }
+.scan-chips span:nth-child(4) { --i: 3; }
+
+/* "Get the app" in the header of every page: the one filled button in the nav. */
+.site-nav a.nav-app { color: #fff; background: var(--accent); margin-left: 6px; white-space: nowrap; }
+.site-nav a.nav-app:hover { color: #fff; background: color-mix(in srgb, var(--accent) 85%, #000); }
+@media (max-width: 420px) { .site-nav a { padding: 8px 11px; } .site-nav a.nav-app { margin-left: 2px; } }
+
+/* The closing card of guides and landing pages: App Store badge, then a quiet link to the home page.
+   (The card's icon rule would otherwise squash the badge.) */
+.guide-cta .store-badge img { width: auto; height: 54px; border-radius: 0; }
+.guide-cta-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.guide-cta-more { font-weight: 600; }
+
+/* A short pointer to the matching calculator, in the middle of a guide. */
+.guide-tip {
+    margin: 32px 0; padding: 18px 22px; border-radius: 18px;
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.guide .guide-tip p { margin: 0; color: var(--text); }
+.guide-tip a { font-weight: 700; white-space: nowrap; }
+
+/* Home page, under the guide cards: the other guides and the landing pages as small pills. */
+.link-chips { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin: 18px auto 0; max-width: 52em; }
+.link-chips span { color: var(--muted); font-weight: 600; font-size: 0.92rem; margin-right: 4px; }
+.link-chips a {
+    padding: 7px 14px; border-radius: 999px; font-size: 0.92rem; font-weight: 600; text-decoration: none;
+    color: var(--text); background: var(--surface); border: 1px solid var(--border);
+}
+.link-chips a:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }

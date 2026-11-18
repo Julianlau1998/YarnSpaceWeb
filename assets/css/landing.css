@@ -1,0 +1,31 @@
+/* Landing pages (row counter, yarn stash, Ravelry, crochet): they use the guide layout from
+   style.css and only add the screenshots in the article and the App Store badge in the closing card. */
+
+.landing-shots {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end;
+    gap: 32px 40px; margin: 36px 0 12px;
+}
+.landing-shots figure { margin: 0; width: min(240px, 72vw); text-align: center; }
+.landing-shots figcaption,
+.landing-shot-wide figcaption { margin-top: 14px; font-size: 0.92rem; color: var(--muted); text-align: center; }
+
+/* The watch screenshot already has the rounded display shape; it only gets a soft shadow. */
+.landing-shots .landing-watch { width: min(200px, 60vw); }
+.landing-watch img {
+    display: block; width: 100%; height: auto; border-radius: 22% / 18%;
+    box-shadow: 0 0 0 6px #1c1c20, 0 0 0 7.5px #5a5a61, 0 22px 44px rgba(20, 12, 70, 0.35);
+}
+
+/* A Mac or iPad screenshot across the column */
+.landing-shot-wide { margin: 36px 0 12px; }
+.landing-shot-wide img {
+    display: block; width: 100%; height: auto; border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 44px rgba(40, 30, 110, 0.18);
+}
+
+
+/* App Store badge right under the intro, so it's visible without scrolling. */
+.landing-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 22px 0 8px; }
+.landing-cta .store-badge img { height: 54px; width: auto; }
+.guide .landing-cta p { margin: 0; font-size: 0.92rem; }
